@@ -1,30 +1,42 @@
 'use strict';
 
-const baseURL = ''
+const baseURL = 'https://api.github.com/search/users?q='
 
-const apiFetch = (searchHandle) => {
-const newURL = `${baseURL}/${searchHandle}`
-return fetch(newURL)
-    .then(res => {
-        if(!res.ok) {
-            alert('No user found.')
-        }
-        return res;
-    })
-    .then(res => res.json())
-    .then(data => console.log(data));
+const renderRepos = (repoData)  => {
+    console.log(repoData);
+    repoData.items.map(item => (console.log(item.repos_url)))
 }
 
-const submitForm = function(){
-    $('form').submit((e) => {
+const apiFetch = (searchHandle) => {
+    const newURL = `${baseURL}${searchHandle}`
+    console.log(newURL);
+    return fetch(newURL)
+        .then(res => {
+            if(!res.ok) {
+                alert('No user found.')
+            }
+            return res;
+        })
+        .then(res => res.json())
+        .then(data => renderRepos(data));
+}
+
+const submitForm = function() {
+    $('#inputForm').submit( (e) => {
         e.preventDefault();
-        let userToSearch = ('#userSearch').val();
-    })
-    console.log(userToSearch);
-    // apiFetch(userToSearch);
+        $('.results').empty();
+        const userToSearch = $('#userSearch').val();
+        console.log(userToSearch);
+        apiFetch(userToSearch);
+    });
 }
 
 const bindListeners = () => {
     submitForm();
 }
 
+const main = function(){
+    bindListeners();
+}
+
+$(main)
